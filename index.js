@@ -1,4 +1,5 @@
 const express = require('express')
+const { path } = require('express/lib/application')
 const {create} = require('ipfs-http-client')
 
 const ipfs = create("http://localhost:5001")
@@ -13,7 +14,18 @@ app.get('/', (req, res) => {
 app.post('/upload', async (req, res) => {
     const data = req.body
     console.log(data)
+    const fileHash = await addFile(data)
+    return res.send(`https://gateway.ipfs.io/ipfs/${fileHash}`)
 })
+
+const addFile = async ({path, content}) => {
+    const file = {path: path, content: Buffer.from(content)}
+    const filesAdded = await ipfs.add(file)
+    console.log(filesAdded)
+    // QmYarjYDXfwcCBFmrk9RKAEfZ9NGYHokrtXRJkw1bkbsJv
+    return filesAdded.cid
+}
+
 app.listen(3000, () => {
     console.log('Server is listening on port 3000')
 })
