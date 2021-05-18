@@ -10,6 +10,10 @@ app.get('/', (req, res) => {
     return res.send('Welcome to my IPFS app')
 })
 
+app.post('/upload', async (req, res) => {
+    const data = req.body
+    console.log(data)
+})
 app.listen(3000, () => {
     console.log('Server is listening on port 3000')
 })
